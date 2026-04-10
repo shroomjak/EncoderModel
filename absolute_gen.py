@@ -172,12 +172,13 @@ CODES = [
     306	,
 ]
 
-MARKER = 8          #001000
+MARKER = 4          #000100
 SECTOR_BITS = 15
 CODE_BITS = 9
 BIT_WIDTH_MM = 0.8
 TRACK_WIDTH_MM = 5
 NUM_SEGMENTS = 55
+
 
 def dec_to_bin(value, width):
     """Перевод десятичного числа в двоичную строку фиксированной длины."""
@@ -275,18 +276,32 @@ def generate_absolute_disc_dxf(
     print(f"[INFO] r_inner_mm = {r_inner_mm:.6f}")
 
 
+def check_correct():
+    flag = True
+    MARKER_BITS = SECTOR_BITS - CODE_BITS
+    reper = f'{MARKER:0{MARKER_BITS}b}'
+    for code in CODES:
+        seq = reper + f'{code:0{CODE_BITS}b}' + reper
+        if seq.count(reper) != 2:
+            flag = False
+
+    return flag
+
 if __name__ == "__main__":
-    generate_absolute_disc_dxf(
-        codes=CODES,
-        marker_code=MARKER,
-        code_bits=CODE_BITS,
-        sector_bits=SECTOR_BITS,
-        bit_width_mm=BIT_WIDTH_MM,
-        track_width_mm=TRACK_WIDTH_MM,
-        n_segments=NUM_SEGMENTS,
-        center_hole_mm=0.0,
-        file_path="absolute_disc.dxf",
-    )
+    if check_correct():
+        generate_absolute_disc_dxf(
+            codes=CODES,
+            marker_code=MARKER,
+            code_bits=CODE_BITS,
+            sector_bits=SECTOR_BITS,
+            bit_width_mm=BIT_WIDTH_MM,
+            track_width_mm=TRACK_WIDTH_MM,
+            n_segments=NUM_SEGMENTS,
+            center_hole_mm=0.0,
+            file_path="absolute_disc.dxf",
+        )
+    else:
+        print('CODE INCORRECT')
 
     '''
     generate_absolute_disc_dxf(
