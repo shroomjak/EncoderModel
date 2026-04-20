@@ -103,25 +103,25 @@ def main():
                 gray = normalize_pixels(pixels, min_val, max_val, args.invert)
                 last_frame = make_strip(gray, args.pixel_width, args.strip_height)
 
-            frame_bgr = cv2.cvtColor(last_frame, cv2.COLOR_GRAY2BGR)
+                frame_bgr = cv2.cvtColor(last_frame, cv2.COLOR_GRAY2BGR)
 
-            if args.overlay:
-                text = f"row={last_row}  range=[{min_val:.1f}, {max_val:.1f}]"
-                cv2.putText(
-                    frame_bgr,
-                    text,
-                    (10, 24),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.6,
-                    (0, 255, 0),
-                    1,
-                    cv2.LINE_AA,
-                )
+                if args.overlay:
+                    text = f"row={last_row}  range=[{min_val:.1f}, {max_val:.1f}]"
+                    cv2.putText(
+                        frame_bgr,
+                        text,
+                        (10, 24),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.6,
+                        (0, 255, 0),
+                        1,
+                        cv2.LINE_AA,
+                    )
 
-            cv2.imshow(win_name, frame_bgr)
-            key = cv2.waitKey(1) & 0xFF
-            if key in (27, ord("q")):
-                break
+                cv2.imshow(win_name, frame_bgr)
+                key = cv2.waitKey(1) & 0xFF
+                if key in (27, ord("q")):
+                    break
 
     except KeyboardInterrupt:
         pass
