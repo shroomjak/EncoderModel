@@ -8,6 +8,9 @@ class MarkerMatch:
     errors: int
     matched_bits: str
 
+    def __repr__(self):
+        return f'Marker(start={self.start_index}, err={self.errors})'
+
 
 @dataclass
 class ExtractedCode:
@@ -17,27 +20,38 @@ class ExtractedCode:
     code_bits: np.ndarray
     code_str: str
 
+    def __repr__(self):
+        return f'Code(after={self.marker_start}, start={self.code_start}, bits={self.code_str})'
 
 
 def cells_to_bits(cell_values, threshold=0.5):
-    return (np.asarray(cell_values, dtype=float) > threshold).astype(np.uint8)
+    """
+    Перевод float cell_values в бинарный массив.
 
+    Ячейки вне ROI могут содержать NaN (sample_bits возвращает NaN
+    для центров, не попавших в ROI). Такие ячейки трактуются как 0,
+    чтобы не ломать поиск маркера на краях.
+    """
+    v = np.asarray(cell_values, dtype=float)
+    bits = np.zeros(len(v), dtype=np.uint8)
+    valid = ~np.isnan(v)
+    bits[valid] = (v[valid] > threshold).astype(np.uint8)
+    return bits
 
 
 def bits_to_string(bits):
     return ''.join(str(int(b)) for b in bits)
 
 
-
 def hamming_distance_str(a, b):
     return sum(x != y for x, y in zip(a, b))
 
 
-
-def find_marker(bits, marker="000100", max_errors=1):
+def find_marker(bits, marker, max_errors=1):
     """
     Поиск маркера по расстоянию Хэмминга.
     """
+
     bit_str = bits_to_string(bits)
     m = len(marker)
     found = []
@@ -52,10 +66,11 @@ def find_marker(bits, marker="000100", max_errors=1):
 
 
 
-def extract_codes_after_markers(bits, marker="000100", code_len=6, max_errors=1):
+def extract_codes_after_markers(bits, marker, code_len=6, max_errors=1):
     """
     Извлечение кодовых слов сразу после найденных маркеров.
     """
+
     bits = np.asarray(bits, dtype=np.uint8)
     markers = find_marker(bits, marker=marker, max_errors=max_errors)
     extracted = []

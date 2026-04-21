@@ -64,6 +64,8 @@ def generate_ccd_signal(
     elif remain < 0:
         pixel_vals = pixel_vals[:l_array]
 
+    print(remain)
+
     idx = np.linspace(-1, 1, l_array)
     vignette = 1.0 - vignette_strength * (1 - np.cos(np.pi * idx / 2))
     pixel_vals *= vignette
