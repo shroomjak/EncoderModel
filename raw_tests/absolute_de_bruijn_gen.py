@@ -28,7 +28,7 @@ def generate_absolute_disc_dxf(
     angle_per_bit = 360.0 / total_bits
 
     for i, bit in enumerate(pattern):
-        r_curr = r_inner_mm if bit == 1 else r_outer_mm
+        r_curr = r_inner_mm if bit == '1' else r_outer_mm
 
         a_start = i * angle_per_bit
         a_end = a_start + angle_per_bit
@@ -46,7 +46,7 @@ def generate_absolute_disc_dxf(
 
         # Радиальный переход на границе битов
         next_bit = pattern[(i + 1) % total_bits]
-        r_next = r_inner_mm if next_bit == 1 else r_outer_mm
+        r_next = r_inner_mm if next_bit == '1' else r_outer_mm
 
         if r_next != r_curr:
             rad = math.radians(90.0 - a_end)
