@@ -131,7 +131,7 @@ def verify_cutdown(seq: str, n: int) -> dict:
 
 if __name__ == "__main__":
     pattern = cutdown_de_bruijn(n=9, L=412)
-    print(pattern)
+    print(verify_cutdown(pattern, n=9))
     generate_absolute_disc_dxf(
         pattern=pattern,
         r_inner_mm=INNER_RADIUS,
