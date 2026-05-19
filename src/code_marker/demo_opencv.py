@@ -7,7 +7,7 @@ import serial
 import cv2
 import numpy as np
 
-from simulation import generate_ccd_signal, ADC_MAX
+from simulation import generate_ccd_signal
 from signal_processing import process_signal, SignalProcessingResult
 from marker_code import cells_to_bits, find_marker, extract_codes_after_markers
 
